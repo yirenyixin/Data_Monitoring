@@ -17,7 +17,10 @@ object KafkaSparkStreaming {
     val frame=df.selectExpr("CAST(value AS STRING)")
 
         import spark.implicits._
+    //map是Spark Streaming中DataFrame API中的一个转换操作，用于将输入数据集中的每个元素x进行映射转换为另一个类型的元素。
+    //frame.as[String]表示将DataFrame转换为字符串类型的Dataset[Strng]，然后使用map对其中的每个字符串进行处理，最终生成一个新的Dataset[Event]类型的query对象
         val query = frame.as[String].map(x => {
+
           val arr = x.split("\t")
           val carType = arr(1).toInt
           val warning = arr(3).toInt
@@ -37,6 +40,8 @@ object KafkaSparkStreaming {
           val warning_1 = if (warning == 1 || carType == 1) 1 else 0
           event(online, activeCount, fault_4, fault_3, fault_2, fault_1, warning_5, warning_4, warning_3, warning_2, warning_1, 0)
         })
+    //query是一个Dataset[Event]对象,使用groupBy按照flag字段进行分组操作
+    //map将结果转换成字符串格式,sum函数对各个指标字段求和
         query.groupBy("flag")
           .sum("onlineCount", "activeCount", "fault_4", "fault_3", "fault_2", "fault_1", "warning_4", "warning_4", "warning_3", "warning_2", "warning_1")
           .map(x => {
@@ -51,7 +56,7 @@ object KafkaSparkStreaming {
           .option("kafka.bootstrap.servers", "127.0.0.1:9092")
           .option("checkpointLocation", "/root/sparkStreming")
           .option("topic", "demo2")
-          .start().awaitTermination()
+          .start().awaitTermination()//start()方法开启流式计算操作，并阻塞等待直到计算完成
 
 
 
