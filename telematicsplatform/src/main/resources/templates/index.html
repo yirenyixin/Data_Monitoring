@@ -162,8 +162,11 @@
             $("#OnlineNum").text(d.onlineCount);
             $("#activeNum").text(d.activeCount)
             $("#liveness").text(d.active)
+
+
             var runningNum = numberHandle(d.activeCount);
             $("#runningNum").html(runningNum)
+
             //3.汽车故障图表生成，创建一个存储4种故障类型数量的数组（fault4Count、fault3Count、fault2Count、fault1Count），调用 fault(Array arr) 函数生成图表
             var faultList = new Array(d.fault4Count, d.fault3Count, d.fault2Count, d.fault1Count)
             fault(faultList)

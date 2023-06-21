@@ -23,8 +23,9 @@ public class KafkaClient {
             ConsumerRecords<String, String> records = consumer.poll(100);
             for (ConsumerRecord<String, String> record : records) {
                 String value = record.value();
+                System.out.println(value);
                 PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(
-                        new FileOutputStream("/root/result.log"),
+                        new FileOutputStream("D:/result.log"),
                         "UTF-8"));
                 if (value.split(",").length == 11) {
                     printWriter.write("已完成实时计算需求\n");
